@@ -142,7 +142,7 @@
           <h2 class="text-2xl sm:text-3xl font-black text-cyan-400 mb-1" id="resultHeaderTitle">പരീക്ഷാ ഫലം (Exam Result)</h2>
           <p class="text-sm text-slate-400 mb-1" id="resultCandidateInfo"></p>
           <span id="resultSubBadge" class="inline-block text-[11px] text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-800">
-            ✓ ഫലം പ്രൊഫൈൽ ഹിസ്റ്ററിയിൽ രേഖപ്പെടുത്തിയിട്ടുണ്ട്
+            ✓ ഫലം ഫയർബേസ് പ്രൊഫൈൽ ഹിസ്റ്ററിയിൽ രേഖപ്പെടുത്തിയിട്ടുണ്ട്
           </span>
         </div>
 
@@ -176,7 +176,7 @@
           </div>
         </div>
 
-        <div id="sheetStatus" class="text-xs text-cyan-400 animate-pulse">സ്കോർ ഗൂഗിൾ ഷീറ്റിലേക്ക് രേഖപ്പെടുത്തുന്നു...</div>
+        <div id="sheetStatus" class="text-xs text-cyan-400 animate-pulse">സ്കോർ ഫയർബേസിലേക്ക് രേഖപ്പെടുത്തുന്നു...</div>
 
         <!-- 8 Mark Cut-off Warning Box -->
         <div id="pdfLockNotice" class="hidden max-w-md mx-auto p-3.5 bg-rose-950/40 border border-rose-800/80 rounded-xl text-xs text-rose-300">
@@ -224,17 +224,17 @@
       </div>
     </div>
 
-    <!-- Leaderboard Modal -->
+    <!-- Leaderboard Modal (Firebase Native) -->
     <div id="leaderboardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
         <div class="flex items-center justify-between border-b border-slate-700 pb-4 mb-4">
           <div>
-            <h3 class="text-xl font-bold text-cyan-400">ലൈവ് റാങ്ക് ലിസ്റ്റ് (Google Sheet)</h3>
+            <h3 class="text-xl font-bold text-cyan-400">ലൈവ് റാങ്ക് ലിസ്റ്റ് (Live Ranking)</h3>
             <p class="text-xs text-slate-400">ആദ്യ ശ്രമത്തിലെ സ്കോർ അടിസ്ഥാനമാക്കി ക്രമീകരിച്ചത്</p>
           </div>
           <button type="button" onclick="closeLeaderboard()" class="text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
         </div>
-        <div id="leaderboardLoading" class="py-10 text-center text-sm text-slate-400">ഗൂഗിൾ ഷീറ്റിൽ നിന്നും റാങ്ക് ലിസ്റ്റ് ശേഖരിക്കുന്നു...</div>
+        <div id="leaderboardLoading" class="py-10 text-center text-sm text-slate-400">ഫയർബേസിൽ നിന്നും റാങ്ക് ലിസ്റ്റ് ശേഖരിക്കുന്നു...</div>
         <div class="flex-1 overflow-y-auto custom-scroll pr-1 hidden" id="leaderboardTableWrapper">
           <table class="w-full text-left text-sm">
             <thead class="text-xs uppercase bg-slate-900/80 text-slate-400 sticky top-0">
@@ -270,12 +270,11 @@
   </main>
 
   <footer class="text-center py-3 text-[11px] text-slate-500 border-t border-slate-800">
-    NEP 2020: ഉന്നതവിദ്യാഭ്യാസ പരിഷ്കാരങ്ങളും HECI-യും (സെറ്റ് 8)[cite: 26] | PSC Model Exam
+    NEP 2020: ഉന്നതവിദ്യാഭ്യാസ പരിഷ്കാരങ്ങളും HECI-യും (സെറ്റ് 8) | PSC Model Exam
   </footer>
 
   <script>
-    let GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbztE9bExjlH5a9Y_O8pU9CzVZy5zl-wzycDISurGzxqwuWB71Nxquzpg00Ocf2QR9Zb/exec";
-    const QUIZ_SHEET_NAME = "ഉന്നതവിദ്യാഭ്യാസ പരിഷ്കാരങ്ങളും HECI-യും - സെറ്റ് 8";
+    const FIREBASE_DB_URL = "https://sk-psc-portal-default-rtdb.asia-southeast1.firebasedatabase.app";
     let ORIGINAL_PDF_URL = "https://docs.google.com/document/d/YOUR_GOOGLE_DOC_ID/export?format=pdf";
     let examTitle = "ഉന്നതവിദ്യാഭ്യാസ പരിഷ്കാരങ്ങളും HECI-യും - സെറ്റ് 8";
 
@@ -284,151 +283,151 @@
         q: "NEP 2020 പ്രകാരം 2035 ആകുമ്പോഴേക്കും ഉന്നതവിദ്യാഭ്യാസ രംഗത്ത് ലക്ഷ്യമിട്ടിട്ടുള്ള ഗ്രോസ് എൻറോൾമെന്റ് റേഷ്യോ (GER) എത്ര ശതമാനമാണ്?",
         options: ["30 ശതമാനം", "100 ശതമാനം", "50 ശതമാനം", "75 ശതമാനം"],
         ans: 2,
-        exp: "ഉന്നതവിദ്യാഭ്യാസത്തിൽ വൊക്കേഷണൽ വിദ്യാഭ്യാസം ഉൾപ്പെടെ 2035-ഓടെ 50% GER കൈവരിക്കാനാണ് ലക്ഷ്യമിടുന്നത് (സ്കൂൾ വിദ്യാഭ്യാസത്തിൽ 2030-ഓടെ 100% GER ആണ് ലക്ഷ്യം)[cite: 26]."
+        exp: "ഉന്നതവിദ്യാഭ്യാസത്തിൽ വൊക്കേഷണൽ വിദ്യാഭ്യാസം ഉൾപ്പെടെ 2035-ഓടെ 50% GER കൈവരിക്കാനാണ് ലക്ഷ്യമിടുന്നത് (സ്കൂൾ വിദ്യാഭ്യാസത്തിൽ 2030-ഓടെ 100% GER ആണ് ലക്ഷ്യം)."
       },
       {
         q: "ഉന്നതവിദ്യാഭ്യാസ പ്രവേശനം വിപുലീകരിക്കുന്നതിനായി 2035-ഓടെ എത്ര കോടി പുതിയ സീറ്റുകൾ സൃഷ്ടിക്കാനാണ് NEP 2020 നിർദ്ദേശിക്കുന്നത്?",
         options: ["5 കോടി സീറ്റുകൾ", "2 കോടി സീറ്റുകൾ", "1 കോടി സീറ്റുകൾ", "3.5 കോടി സീറ്റുകൾ"],
         ans: 3,
-        exp: "GER 50 ശതമാനത്തിലേക്ക് എത്തിക്കാൻ 3.5 കോടി (35 ദശലക്ഷം) പുതിയ സീറ്റുകൾ ഉന്നതവിദ്യാഭ്യാസത്തിൽ കൂട്ടിച്ചേർക്കും[cite: 26]."
+        exp: "GER 50 ശതമാനത്തിലേക്ക് എത്തിക്കാൻ 3.5 കോടി (35 ദശലക്ഷം) പുതിയ സീറ്റുകൾ ഉന്നതവിദ്യാഭ്യാസത്തിൽ കൂട്ടിച്ചേർക്കും."
       },
       {
         q: "ഹയർ എഡ്യൂക്കേഷൻ കമ്മീഷൻ ഓഫ് ഇന്ത്യയുടെ (HECI) പരിധിയെ സംബന്ധിച്ച പ്രസ്താവനകളിൽ ശരിയായവ ഏവ?\n1. മെഡിക്കൽ വിദ്യാഭ്യാസവും നിയമ വിദ്യാഭ്യാസവും HECI-യുടെ നിയന്ത്രണ പരിധിക്ക് പുറത്താണ് .\n2. ഇന്ത്യയിലെ മുഴുവൻ മെഡിക്കൽ കോളേജുകളും HECI നേരിട്ട് ഏറ്റെടുത്ത് ഭരണം നടത്തും .\n3. യു.ജി.സി, എ.ഐ.സി.ടി.ഇ തുടങ്ങിയ പഴയ വിവിധ റെഗുലേറ്ററുകൾക്ക് പകരമായിട്ടാണ് HECI വിഭാവനം ചെയ്തിട്ടുള്ളത് .",
         options: ["2, 3 ശരിയാണ്", "1 ഉം 3 ഉം ശരിയാണ്", "1, 2 ശരിയാണ്", "1, 2, 3 ശരിയാണ്"],
         ans: 1,
-        exp: "രണ്ടാമത്തെ പ്രസ്താവന തെറ്റാണ്[cite: 26]. മെഡിക്കൽ, ലീഗൽ വിദ്യാഭ്യാസം HECI-ക്ക് പുറത്താണ് (അവ അതത് പ്രത്യേക കൗൺസിലുകളുടെ കീഴിലാണ്)[cite: 26]. 1, 3 ശരിയാണ്[cite: 26]."
+        exp: "രണ്ടാമത്തെ പ്രസ്താവന തെറ്റാണ്. മെഡിക്കൽ, ലീഗൽ വിദ്യാഭ്യാസം HECI-ക്ക് പുറത്താണ് (അവ അതത് പ്രത്യേക കൗൺസിലുകളുടെ കീഴിലാണ്). 1, 3 ശരിയാണ്."
       },
       {
         q: "വിദ്യാർത്ഥികൾ നേടുന്ന അക്കാദമിക് ക്രെഡിറ്റുകൾ ഡിജിറ്റലായി സൂക്ഷിക്കാനും മറ്റു സ്ഥാപനങ്ങളിലേക്ക് കൈമാറാനും സഹായിക്കുന്ന ദേശീയ സംവിധാനം ഏത്?",
         options: ["അക്കാദമിക് ബാങ്ക് ഓഫ് ക്രെഡിറ്റ്സ് (ABC)", "നാഷണൽ സേവിംഗ്സ് ബാങ്ക്", "ഡിജിറ്റൽ ലോക്കർ സിസ്റ്റം", "യു.ജി.സി ക്രെഡിറ്റ് പോർട്ടൽ"],
         ans: 0,
-        exp: "ഒരു വാണിജ്യ ബാങ്ക് പണം സൂക്ഷിക്കുന്നതുപോലെ വിദ്യാർത്ഥികളുടെ അക്കാദമിക് ക്രെഡിറ്റുകൾ സുരക്ഷിതമായി സൂക്ഷിക്കുന്ന ഡിജിറ്റൽ ശേഖരണിയാണ് ABC[cite: 26]."
+        exp: "ഒരു വാണിജ്യ ബാങ്ക് പണം സൂക്ഷിക്കുന്നതുപോലെ വിദ്യാർത്ഥികളുടെ അക്കാദമിക് ക്രെഡിറ്റുകൾ സുരക്ഷിതമായി സൂക്ഷിക്കുന്ന ഡിജിറ്റൽ ശേഖരണിയാണ് ABC."
       },
       {
         q: "അക്കാദമിക് ബാങ്ക് ഓഫ് ക്രെഡിറ്റ്സ് (ABC) സംവിധാനത്തെ സംബന്ധിച്ച പ്രസ്താവനകളിൽ ശരിയായവ ഏവ?\n1. വിദ്യാർത്ഥികൾക്ക് പഠനത്തിനായി പലിശരഹിത വിദ്യാഭ്യാസ വായ്പ നൽകുന്ന ഒരു വാണിജ്യ ബാങ്കാണിത് .\n2. അംഗീകൃത സർവ്വകലാശാലകളിൽ നിന്ന് വിദ്യാർത്ഥികൾ നേടുന്ന ഡിജിറ്റൽ ക്രെഡിറ്റുകൾ ഇതിൽ സുരക്ഷിതമായി സൂക്ഷിക്കുന്നു .\n3. വിദ്യാർത്ഥികൾക്ക് ഒരു സ്ഥാപനത്തിൽ നിന്ന് മറ്റൊരു സ്ഥാപനത്തിലേക്ക് ക്രെഡിറ്റുകൾ കൈമാറ്റം ചെയ്യാൻ ഇത് സഹായിക്കുന്നു .",
         options: ["2, 3 ശരിയാണ്", "1 ഉം 3 ഉം ശരിയാണ്", "1, 2 ശരിയാണ്", "1, 2, 3 ശരിയാണ്"],
         ans: 0,
-        exp: "ഒന്നാമത്തെ പ്രസ്താവന തെറ്റാണ്[cite: 26]. ABC പണമിടപാടുകളോ വായ്പയോ നൽകുന്നില്ല; ഇത് അക്കാദമിക് ക്രെഡിറ്റുകൾ സൂക്ഷിക്കുന്ന ഡിജിറ്റൽ റിപ്പോസിറ്ററിയാണ്[cite: 26]. 2, 3 ശരിയാണ്[cite: 26]."
+        exp: "ഒന്നാമത്തെ പ്രസ്താവന തെറ്റാണ്. ABC പണമിടപാടുകളോ വായ്പയോ നൽകുന്നില്ല; ഇത് അക്കാദമിക് ക്രെഡിറ്റുകൾ സൂക്ഷിക്കുന്ന ഡിജിറ്റൽ റിപ്പോസിറ്ററിയാണ്. 2, 3 ശരിയാണ്."
       },
       {
         q: "NEP 2020 പ്രകാരം 4 വർഷത്തെ ബിരുദ പ്രോഗ്രാമിൽ ഒന്നാം വർഷത്തിന് ശേഷം പഠനം നിർത്തി പോകുന്ന വിദ്യാർത്ഥിക്ക് ലഭിക്കുന്ന യോഗ്യത എന്താണ്?",
         options: ["ഡിപ്ലോമ", "അണ്ടർഗ്രാജ്വേറ്റ് സർട്ടിഫിക്കറ്റ്", "ബിരുദം", "റിസർച്ച് ഡിഗ്രി"],
         ans: 1,
-        exp: "മൾട്ടിപ്പിൾ എൻട്രി-എക്സിറ്റ് പ്രകാരം: 1 വർഷം പൂർത്തിയാക്കിയാൽ സർട്ടിഫിക്കറ്റ്, 2 വർഷത്തിന് ഡിപ്ലോമ, 3 വർഷത്തിന് ബാച്ചിലേഴ്സ് ബിരുദം, 4 വർഷത്തിന് റിസർച്ച് ബിരുദം നൽകുന്നു[cite: 26]."
+        exp: "മൾട്ടിപ്പിൾ എൻട്രി-എക്സിറ്റ് പ്രകാരം: 1 വർഷം പൂർത്തിയാക്കിയാൽ സർട്ടിഫിക്കറ്റ്, 2 വർഷത്തിന് ഡിപ്ലോമ, 3 വർഷത്തിന് ബാച്ചിലേഴ്സ് ബിരുദം, 4 വർഷത്തിന് റിസർച്ച് ബിരുദം നൽകുന്നു."
       },
       {
         q: "കോളേജുകളുടെ പരമ്പരാഗത അഫിലിയേഷൻ സമ്പ്രദായം എത്ര വർഷത്തിനുള്ളിൽ ഘട്ടംഘട്ടമായി നിർത്തലാക്കാനാണ് NEP 2020 ലക്ഷ്യമിടുന്നത്?",
         options: ["5 വർഷം", "10 വർഷം", "15 വർഷം", "25 വർഷം"],
         ans: 2,
-        exp: "15 വർഷം കൊണ്ട് അഫിലിയേഷൻ സമ്പ്രദായം അവസാനിപ്പിച്ച് എല്ലാ കോളേജുകൾക്കും ഗ്രേഡഡ് സ്വയംഭരണ പദവി നൽകി സ്വയംഭരണ ബിരുദ കോളേജുകളാക്കി മാറ്റും[cite: 26]."
+        exp: "15 വർഷം കൊണ്ട് അഫിലിയേഷൻ സമ്പ്രദായം അവസാനിപ്പിച്ച് എല്ലാ കോളേജുകൾക്കും ഗ്രേഡഡ് സ്വയംഭരണ പദവി നൽകി സ്വയംഭരണ ബിരുദ കോളേജുകളാക്കി മാറ്റും."
       },
       {
         q: "ഉന്നതവിദ്യാഭ്യാസ ബിരുദ ഘടനയെക്കുറിച്ചുള്ള NEP 2020 വ്യവസ്ഥകളിൽ ശരിയായവ ഏവ?\n1. ബിരുദ കോഴ്സുകൾ 3 വർഷം കൊണ്ടോ 4 വർഷം കൊണ്ടോ പഠിച്ചിറങ്ങാനുള്ള മൾട്ടിപ്പിൾ എക്സിറ്റ് സ്വാതന്ത്ര്യമുണ്ട് .\n2. 4 വർഷ ബിരുദം പൂർത്തിയാക്കുന്ന എല്ലാ വിദ്യാർത്ഥികൾക്കും യാതൊരു വ്യവസ്ഥയുമില്ലാതെ ഓട്ടോമാറ്റിക് ആയി ജോലി നൽകും .\n3. ഉന്നതവിദ്യാഭ്യാസത്തിൽ ഡിഗ്രി സർട്ടിഫിക്കറ്റ് ലഭിക്കാൻ വിദ്യാർത്ഥികൾ 10 വർഷം തുടർച്ചയായി പഠിച്ചിരിക്കണം .",
         options: ["2, 3 ശരിയാണ്", "1, 2 ശരിയാണ്", "3 മാത്രം ശരിയാണ്", "1 മാത്രം ശരിയാണ്"],
         ans: 3,
-        exp: "2, 3 പ്രസ്താവനകൾ തെറ്റാണ്[cite: 26]. 3 അല്ലെങ്കിൽ 4 വർഷത്തെ ബിരുദമാണ് നൽകുന്നത്; ഓട്ടോമാറ്റിക് ജോലിയോ 10 വർഷ പഠനമോ ഇല്ല[cite: 26]. അതിനാൽ 1 മാത്രം ശരി[cite: 26]."
+        exp: "2, 3 പ്രസ്താവനകൾ തെറ്റാണ്. 3 അല്ലെങ്കിൽ 4 വർഷത്തെ ബിരുദമാണ് നൽകുന്നത്; ഓട്ടോമാറ്റിക് ജോലിയോ 10 വർഷ പഠനമോ ഇല്ല. അതിനാൽ 1 മാത്രം ശരി."
       },
       {
         q: "NEP 2020-ന്റെ ഭാഗമായി ഇന്ത്യയിൽ പൂർണ്ണമായി നിർത്തലാക്കാൻ തീരുമാനിച്ച പ്രശസ്തമായ ബിരുദാനന്തര ഗവേഷണ കോഴ്സ് ഏതാണ്?",
         options: ["എം.എസ്.ഡബ്ല്യു (MSW)", "പി.എച്ച്.ഡി (Ph.D)", "എം.എഡ് (M.Ed)", "എം.ഫിൽ (M.Phil)"],
         ans: 3,
-        exp: "എം.ഫിൽ നിർത്തലാക്കി; ബിരുദാനന്തര ബിരുദത്തിന് ശേഷം വിദ്യാർത്ഥികൾക്ക് നേരിട്ട് പിഎച്ച്.ഡിയിലേക്ക് പ്രവേശനം നേടാൻ സൗകര്യമൊരുക്കി[cite: 26]."
+        exp: "എം.ഫിൽ നിർത്തലാക്കി; ബിരുദാനന്തര ബിരുദത്തിന് ശേഷം വിദ്യാർത്ഥികൾക്ക് നേരിട്ട് പിഎച്ച്.ഡിയിലേക്ക് പ്രവേശനം നേടാൻ സൗകര്യമൊരുക്കി."
       },
       {
         q: "നാഷണൽ റിസർച്ച് ഫൗണ്ടേഷന്റെ (NRF) ചുമതലകളെ സംബന്ധിച്ച പ്രസ്താവനകളിൽ ശരിയായവ ഏവ?\n1. സ്കൂളുകളിലെ അധ്യാപകരെ സ്ഥലംമാറ്റാനുള്ള ഉത്തരവിറക്കുന്നത് NRF ആണ് .\n2. സർവ്വകലാശാലകളിലും കോളേജുകളിലും ഗുണനിലവാരമുള്ള ഗവേഷണങ്ങൾക്ക് ധനസഹായം നൽകുകയും ഗവേഷണ സംസ്കാരം വളർത്തുകയും ചെയ്യുന്നു .\n3. രാജ്യത്തെ മുഴുവൻ കോളേജുകൾക്കും ഗ്രേഡിംഗ് നൽകുന്ന അക്രഡിറ്റേഷൻ സമിതിയാണ് NRF .",
         options: ["1, 2 ശരിയാണ്", "1, 3 ശരിയാണ്", "2 മാത്രം ശരിയാണ്", "3 മാത്രം ശരിയാണ്"],
         ans: 2,
-        exp: "1, 3 പ്രസ്താവനകൾ തെറ്റാണ്[cite: 26]. അക്രഡിറ്റേഷൻ നടത്തുന്നത് NAC ആണ്; ഗവേഷണ പ്രോത്സാഹനമാണ് NRF നിർവ്വഹിക്കുന്നത്[cite: 26]. അതിനാൽ 2 മാത്രം ശരി[cite: 26]."
+        exp: "1, 3 പ്രസ്താവനകൾ തെറ്റാണ്. അക്രഡിറ്റേഷൻ നടത്തുന്നത് NAC ആണ്; ഗവേഷണ പ്രോത്സാഹനമാണ് NRF നിർവ്വഹിക്കുന്നത്. അതിനാൽ 2 മാത്രം ശരി."
       },
       {
         q: "ഉന്നതവിദ്യാഭ്യാസ സ്ഥാപനങ്ങളിൽ ഉയർന്ന നിലവാരമുള്ള ഗവേഷണ സംസ്കാരം വളർത്താനും ധനസഹായം നൽകാനും സ്ഥാപിക്കുന്ന ഉന്നത ഗവേഷണ സമിതി ഏത്?",
         options: ["നാഷണൽ റിസർച്ച് ഫൗണ്ടേഷൻ (NRF)", "ഐ.സി.എച്ച്.ആർ", "ഐ.സി.എം.ആർ", "സി.എസ്.ഐ.ആർ"],
         ans: 0,
-        exp: "എല്ലാ വിഷയങ്ങളിലുമുള്ള ഗവേഷണങ്ങൾക്ക് ഫണ്ട് നൽകാനും മാർഗ്ഗനിർദ്ദേശം നൽകാനും NRF സ്ഥാപിക്കാൻ നയം ശുപാർശ ചെയ്യുന്നു[cite: 26]."
+        exp: "എല്ലാ വിഷയങ്ങളിലുമുള്ള ഗവേഷണങ്ങൾക്ക് ഫണ്ട് നൽകാനും മാർഗ്ഗനിർദ്ദേശം നൽകാനും NRF സ്ഥാപിക്കാൻ നയം ശുപാർശ ചെയ്യുന്നു."
       },
       {
         q: "യു.ജി.സി, എ.ഐ.സി.ടി.ഇ എന്നിവയ്ക്ക് പകരമായി ഉന്നതവിദ്യാഭ്യാസത്തിനായി നിർദ്ദേശിക്കപ്പെട്ട ഏകീകൃത അംബ്രല്ല റെഗുലേറ്റർ ഏതാണ്?",
         options: ["നാഷണൽ എഡ്യൂക്കേഷൻ കൗൺസിൽ", "ഹയർ എഡ്യൂക്കേഷൻ കമ്മീഷൻ ഓഫ് ഇന്ത്യ (HECI)", "സെൻട്രൽ യൂണിവേഴ്സിറ്റി ബോർഡ്", "യൂണിവേഴ്സിറ്റി ഗ്രാൻഡ്സ് ബോർഡ്"],
         ans: 1,
-        exp: "മെഡിക്കൽ, ലീഗൽ വിദ്യാഭ്യാസം ഒഴികെയുള്ള ഉന്നതവിദ്യാഭ്യാസത്തെ ഒറ്റ കുടക്കീഴിൽ കൊണ്ടുവരാൻ വിഭാവനം ചെയ്തതാണ് HECI[cite: 26]."
+        exp: "മെഡിക്കൽ, ലീഗൽ വിദ്യാഭ്യാസം ഒഴികെയുള്ള ഉന്നതവിദ്യാഭ്യാസത്തെ ഒറ്റ കുടക്കീഴിൽ കൊണ്ടുവരാൻ വിഭാവനം ചെയ്തതാണ് HECI."
       },
       {
         q: "ഉന്നതവിദ്യാഭ്യാസ സ്ഥാപനങ്ങളുടെ വികേന്ദ്രീകരണത്തെ സംബന്ധിച്ച പ്രസ്താവനകളിൽ ശരിയായവ ഏവ?\n1. 2030 ആകുമ്പോഴേക്കും ഓരോ ജില്ലയിലോ സമീപത്തോ കുറഞ്ഞത് ഒരു മൾട്ടി-ഡിസിപ്ലിനറി ഉന്നതവിദ്യാഭ്യാസ സ്ഥാപനമെങ്കിലും ഉണ്ടായിരിക്കണം .\n2. അഫിലിയേറ്റഡ് കോളേജുകൾ കാലക്രമേണ സ്വയംഭരണ ബിരുദ കോളേജുകളായോ സർവ്വകലാശാലകളുടെ ഭാഗമായോ മാറും .\n3. ഗവേഷണ-തീവ്ര സർവ്വകലാശാലകൾ, അധ്യാപന-തീവ്ര സർവ്വകലാശാലകൾ എന്നിങ്ങനെ ഉന്നത സ്ഥാപനങ്ങൾ പുനഃസംഘടിപ്പിക്കപ്പെടും .",
         options: ["1, 2 ശരിയാണ്", "1, 2, 3 ശരിയാണ്", "1 ഉം 3 ഉം ശരിയാണ്", "2, 3 ശരിയാണ്"],
         ans: 1,
-        exp: "ജില്ലാതല ലക്ഷ്യം, അഫിലിയേഷൻ അവസാനിപ്പിക്കൽ, സ്ഥാപനങ്ങളുടെ തരംതിരിവ് എന്നിവയെക്കുറിച്ചുള്ള മൂന്ന് പ്രസ്താവനകളും ശരിയാണ്[cite: 26]."
+        exp: "ജില്ലാതല ലക്ഷ്യം, അഫിലിയേഷൻ അവസാനിപ്പിക്കൽ, സ്ഥാപനങ്ങളുടെ തരംതിരിവ് എന്നിവയെക്കുറിച്ചുള്ള മൂന്ന് പ്രസ്താവനകളും ശരിയാണ്."
       },
       {
         q: "ഹയർ എഡ്യൂക്കേഷൻ കമ്മീഷൻ ഓഫ് ഇന്ത്യയുടെ (HECI) കീഴിൽ സ്ഥാപനങ്ങളുടെ അക്രഡിറ്റേഷൻ ചുമതല നിർവ്വഹിക്കുന്ന ലംബം ഏതാണ്?",
         options: ["ജനറൽ എഡ്യൂക്കേഷൻ കൗൺസിൽ (GEC)", "ഹയർ എഡ്യൂക്കേഷൻ ഗ്രാന്റ്സ് കൗൺസിൽ (HEGC)", "നാഷണൽ അക്രഡിറ്റേഷൻ കൗൺസിൽ (NAC)", "നാഷണൽ ഹയർ എഡ്യൂക്കേഷൻ റെഗുലേറ്ററി കൗൺസിൽ (NHERC)"],
         ans: 2,
-        exp: "അക്രഡിറ്റേഷൻ ചുമതല NAC-ക്കും, റെഗുലേഷൻ NHERC-ക്കും, ഫണ്ടിംഗ് HEGC-ക്കും, അക്കാദമിക് നിലവാരം GEC-ക്കുമാണ്[cite: 26]."
+        exp: "അക്രഡിറ്റേഷൻ ചുമതല NAC-ക്കും, റെഗുലേഷൻ NHERC-ക്കും, ഫണ്ടിംഗ് HEGC-ക്കും, അക്കാദമിക് നിലവാരം GEC-ക്കുമാണ്."
       },
       {
         q: "ഗവേഷണ ബിരുദങ്ങളെ സംബന്ധിച്ച NEP 2020 നിലപാടുകളിൽ തെറ്റായവ ഏവ?\n1. NEP 2020 പ്രകാരം പിഎച്ച്.ഡി (Ph.D) ബിരുദം ഇന്ത്യയിൽ പൂർണ്ണമായി നിർത്തലാക്കി .\n2. മാസ്റ്റർ ഓഫ് ഫിലോസഫി (M.Phil) പ്രോഗ്രാം പൂർണ്ണമായി നിർത്തലാക്കാൻ നയം ശുപാർശ ചെയ്തു .\n3. ബിരുദാനന്തര ബിരുദം പൂർത്തിയാക്കിയവർക്ക് നേരിട്ട് പിഎച്ച്.ഡി ചെയ്യാൻ അനുമതിയുണ്ട് .",
         options: ["1 മാത്രം തെറ്റാണ്", "1, 3 തെറ്റാണ്", "2 മാത്രം തെറ്റാണ്", "3 മാത്രം തെറ്റാണ്"],
         ans: 0,
-        exp: "ഒന്നാമത്തെ പ്രസ്താവന തെറ്റാണ്[cite: 26]. പിഎച്ച്.ഡി നിർത്തലാക്കിയിട്ടില്ല; എം.ഫിൽ ആണ് നിർത്തലാക്കിയത്[cite: 26]. 2, 3 ശരിയാണ്[cite: 26]."
+        exp: "ഒന്നാമത്തെ പ്രസ്താവന തെറ്റാണ്. പിഎച്ച്.ഡി നിർത്തലാക്കിയിട്ടില്ല; എം.ഫിൽ ആണ് നിർത്തലാക്കിയത്. 2, 3 ശരിയാണ്."
       },
       {
         q: "HECI-യുടെ കീഴിൽ സർവ്വകലാശാലകൾക്കും കോളേജുകൾക്കും ധനസഹായവും ഗ്രാന്റുകളും നൽകാൻ ചുമതലപ്പെട്ട ലംബം ഏതാണ്?",
         options: ["GEC", "നാഷണൽ അക്രഡിറ്റേഷൻ കൗൺസിൽ (NAC)", "NHERC", "ഹയർ എഡ്യൂക്കേഷൻ ഗ്രാന്റ്സ് കൗൺസിൽ (HEGC)"],
         ans: 3,
-        exp: "പ്രകടനത്തിന്റെ അടിസ്ഥാനത്തിൽ സ്ഥാപനങ്ങൾക്ക് ഫണ്ടിംഗ് നൽകുന്നത് ഹയർ എഡ്യൂക്കേഷൻ ഗ്രാന്റ്സ് കൗൺസിലാണ് (HEGC)[cite: 26]."
+        exp: "പ്രകടനത്തിന്റെ അടിസ്ഥാനത്തിൽ സ്ഥാപനങ്ങൾക്ക് ഫണ്ടിംഗ് നൽകുന്നത് ഹയർ എഡ്യൂക്കേഷൻ ഗ്രാന്റ്സ് കൗൺസിലാണ് (HEGC)."
       },
       {
         q: "2030 ആകുമ്പോഴേക്കും സ്കൂൾ അധ്യാപകരാകാനുള്ള ഏറ്റവും കുറഞ്ഞ യോഗ്യതയായി NEP 2020 നിശ്ചയിച്ചിരിക്കുന്നത് എന്താണ്?",
         options: ["4 വർഷത്തെ ഇന്റഗ്രേറ്റഡ് ബി.എഡ്", "എം.എഡ് ബിരുദം", "2 വർഷത്തെ ബി.എഡ്", "1 വർഷത്തെ ബി.എഡ്"],
         ans: 0,
-        exp: "2030-ഓടെ സ്കൂൾ അധ്യാപകരുടെ മിനിമം യോഗ്യത 4 വർഷത്തെ ഇന്റഗ്രേറ്റഡ് ബി.എഡ് (4-year Integrated B.Ed) ആയിരിക്കും[cite: 26]."
+        exp: "2030-ഓടെ സ്കൂൾ അധ്യാപകരുടെ മിനിമം യോഗ്യത 4 വർഷത്തെ ഇന്റഗ്രേറ്റഡ് ബി.എഡ് (4-year Integrated B.Ed) ആയിരിക്കും."
       },
       {
         q: "HECI-യുടെ ഘടനയെ സംബന്ധിച്ച പ്രസ്താവനകളിൽ തെറ്റായവ ഏവ?\n1. നാഷണൽ ഹയർ എഡ്യൂക്കേഷൻ റെഗുലേറ്ററി കൗൺസിൽ (NHERC) പ്രാഥമിക റെഗുലേറ്ററായി പ്രവർത്തിക്കുന്നു .\n2. ജനറൽ എഡ്യൂക്കേഷൻ കൗൺസിൽ (GEC) സർവ്വകലാശാലകൾക്ക് പണം പലിശയ്ക്ക് നൽകുന്ന ബാങ്കാണ് .\n3. നാഷണൽ അക്രഡിറ്റേഷൻ കൗൺസിൽ (NAC) സ്ഥാപനങ്ങൾക്ക് ഗുണനിലവാര അംഗീകാരം നൽകുന്നു .",
         options: ["എല്ലാം തെറ്റാണ്", "3 മാത്രം തെറ്റാണ്", "1 മാത്രം തെറ്റാണ്", "2 മാത്രം തെറ്റാണ്"],
         ans: 3,
-        exp: "രണ്ടാമത്തെ പ്രസ്താവന തെറ്റാണ്[cite: 26]. GEC അക്കാദമിക് നിലവാരങ്ങളും ലേണിംഗ് ഔട്ട്കംസും നിശ്ചയിക്കുന്ന സമിതിയാണ് (ബാങ്കല്ല; ഫണ്ടിംഗ് നൽകുന്നത് HEGC ആണ്)[cite: 26]. 1, 3 ശരിയാണ്[cite: 26]."
+        exp: "രണ്ടാമത്തെ പ്രസ്താവന തെറ്റാണ്. GEC അക്കാദമിക് നിലവാരങ്ങളും ലേണിംഗ് ഔട്ട്കംസും നിശ്ചയിക്കുന്ന സമിതിയാണ് (ബാങ്കല്ല; ഫണ്ടിംഗ് നൽകുന്നത് HEGC ആണ്). 1, 3 ശരിയാണ്."
       },
       {
         q: "ഇന്ത്യയിൽ തലമുറകളായി വികസിച്ചുവന്ന പരമ്പരാഗത തൊഴിൽ-നൈപുണ്യ അറിവുകൾ ഏത് പേരിലാണ് NEP 2020-ൽ അറിയപ്പെടുന്നത്?",
         options: ["കൗശൽ വിദ്യ", "ലോക് വിദ്യ", "വിദ്യാദാൻ", "ഭാരത് വിദ്യ"],
         ans: 1,
-        exp: "നെയ്ത്ത്, മൺപാത്ര നിർമ്മാണം, മരപ്പണി, പരമ്പരാഗത കരകൗശലങ്ങൾ തുടങ്ങിയ തനത് ഇന്ത്യൻ തൊഴിൽ വിജ്ഞാനത്തെയാണ് 'ലോക് വിദ്യ' എന്ന് വിളിക്കുന്നത്[cite: 26]."
+        exp: "നെയ്ത്ത്, മൺപാത്ര നിർമ്മാണം, മരപ്പണി, പരമ്പരാഗത കരകൗശലങ്ങൾ തുടങ്ങിയ തനത് ഇന്ത്യൻ തൊഴിൽ വിജ്ഞാനത്തെയാണ് 'ലോക് വിദ്യ' എന്ന് വിളിക്കുന്നത്."
       },
       {
         q: "തൊഴിലധിഷ്ഠിത വിദ്യാഭ്യാസത്തെയും അന്താരാഷ്ട്രവൽക്കരണത്തെയും സംബന്ധിച്ച പ്രസ്താവനകളിൽ തെറ്റായവ ഏവ?\n1. സ്കൂളുകളിൽ ആറാം ക്ലാസ് മുതൽ ഇന്റേൺഷിപ്പോടെ തൊഴിൽ വിദ്യാഭ്യാസം ആരംഭിക്കുന്നു .\n2. മികച്ച ഇന്ത്യൻ സർവ്വകലാശാലകൾക്ക് വിദേശത്ത് സ്വന്തം കാമ്പസുകൾ തുടങ്ങാൻ അനുമതി നൽകുന്നു .\n3. വിദേശ സർവ്വകലാശാലകൾ ഇന്ത്യയിൽ കാമ്പസ് ആരംഭിക്കുന്നത് രാജ്യദ്രോഹക്കുറ്റമായി കണക്കാക്കുന്നു .",
         options: ["1, 2 തെറ്റാണ്", "2 മാത്രം തെറ്റാണ്", "3 മാത്രം തെറ്റാണ്", "എല്ലാം തെറ്റാണ്"],
         ans: 2,
-        exp: "മൂന്നാമത്തെ പ്രസ്താവന തെറ്റാണ്[cite: 26]. മുൻനിര വിദേശ സർവ്വകലാശാലകൾക്ക് ഇന്ത്യയിൽ കാമ്പസുകൾ സ്ഥാപിക്കാൻ നയം സ്വാഗതം ചെയ്യുന്നുണ്ട്[cite: 26]. 1, 2 ശരിയാണ്[cite: 26]."
+        exp: "മൂന്നാമത്തെ പ്രസ്താവന തെറ്റാണ്. മുൻനിര വിദേശ സർവ്വകലാശാലകൾക്ക് ഇന്ത്യയിൽ കാമ്പസുകൾ സ്ഥാപിക്കാൻ നയം സ്വാഗതം ചെയ്യുന്നുണ്ട്. 1, 2 ശരിയാണ്."
       },
       {
         q: "2025 ആകുമ്പോഴേക്കും പഠിതാക്കളിൽ കുറഞ്ഞത് എത്ര ശതമാനം പേർക്കെങ്കിലും തൊഴിലധിഷ്ഠിത വിദ്യാഭ്യാസം ലഭിച്ചിരിക്കണമെന്നാണ് NEP 2020 ലക്ഷ്യമിടുന്നത്?",
         options: ["25 ശതമാനം", "100 ശതമാനം", "50 ശതമാനം", "75 ശതമാനം"],
         ans: 2,
-        exp: "2025-ഓടെ സ്കൂൾ, ഉന്നതവിദ്യാഭ്യാസ രംഗത്തെ 50% കുട്ടികൾക്കെങ്കിലും തൊഴിൽ പരിചയവും ഇന്റേൺഷിപ്പും നൽകാൻ നയം നിർദ്ദേശിക്കുന്നു[cite: 26]."
+        exp: "2025-ഓടെ സ്കൂൾ, ഉന്നതവിദ്യാഭ്യാസ രംഗത്തെ 50% കുട്ടികൾക്കെങ്കിലും തൊഴിൽ പരിചയവും ഇന്റേൺഷിപ്പും നൽകാൻ നയം നിർദ്ദേശിക്കുന്നു."
       },
       {
         q: "നാഷണൽ ടെസ്റ്റിംഗ് ഏജൻസിയെയും (NTA) ബിരുദങ്ങളെയും സംബന്ധിച്ച പ്രസ്താവനകളിൽ തെറ്റായവ ഏവ?\n1. ഉന്നതവിദ്യാഭ്യാസ സ്ഥാപനങ്ങളിലേക്കുള്ള പൊതു പ്രവേശന പരീക്ഷകൾ നടത്തുന്നത് NTA ആണ് .\n2. NTA തന്നെയാണ് ഇന്ത്യയിലെ എല്ലാ ബിരുദധാരികൾക്കും ഡിഗ്രി സർട്ടിഫിക്കറ്റ് നേരിട്ട് പ്രിന്റ് ചെയ്തു നൽകുന്നത് .\n3. കോളേജുകളിലെ വിദ്യാർത്ഥികൾക്ക് മാർക്ക് കുറഞ്ഞാൽ NTA വിദ്യാർത്ഥികളെ ജയിലിലടയ്ക്കാൻ ഉത്തരവിടുന്നു .",
         options: ["എല്ലാം തെറ്റാണ്", "2, 3 തെറ്റാണ്", "3 മാത്രം തെറ്റാണ്", "1 മാത്രം തെറ്റാണ്"],
         ans: 1,
-        exp: "2, 3 പ്രസ്താവനകൾ തെറ്റാണ്[cite: 26]. NTA എൻട്രൻസ് പരീക്ഷകൾ മാത്രമാണ് നടത്തുന്നത്; ഡിഗ്രി നൽകുന്നത് സർവ്വകലാശാലകളാണ്[cite: 26]. 1 ശരിയാണ്[cite: 26]."
+        exp: "2, 3 പ്രസ്താവനകൾ തെറ്റാണ്. NTA എൻട്രൻസ് പരീക്ഷകൾ മാത്രമാണ് നടത്തുന്നത്; ഡിഗ്രി നൽകുന്നത് സർവ്വകലാശാലകളാണ്. 1 ശരിയാണ്."
       },
       {
         q: "ഉന്നതവിദ്യാഭ്യാസ സ്ഥാപനങ്ങളിലേക്കുള്ള പ്രവേശനത്തിനായി പൊതു പ്രവേശന പരീക്ഷകൾ (Common Entrance Tests) നടത്താൻ നിർദ്ദേശിക്കപ്പെട്ട ഏജൻസി ഏത്?",
         options: ["എ.ഐ.സി.ടി.ഇ (AICTE)", "യു.പി.എസ്.സി (UPSC)", "യു.ജി.സി (UGC)", "നാഷണൽ ടെസ്റ്റിംഗ് ഏജൻസി (NTA)"],
         ans: 3,
-        exp: "ഉന്നതവിദ്യാഭ്യാസ പ്രവേശനത്തിനായി CUET ഉൾപ്പെടെയുള്ള പരീക്ഷകൾ നടത്തുന്നത് NTA ആണ്[cite: 26]. എന്നാൽ ബിരുദങ്ങൾ നൽകുന്നത് അതത് സർവ്വകലാശാലകളാണ്[cite: 26]."
+        exp: "ഉന്നതവിദ്യാഭ്യാസ പ്രവേശനത്തിനായി CUET ഉൾപ്പെടെയുള്ള പരീക്ഷകൾ നടത്തുന്നത് NTA ആണ്. എന്നാൽ ബിരുദങ്ങൾ നൽകുന്നത് അതത് സർവ്വകലാശാലകളാണ്."
       },
       {
         q: "NEP 2020-ലെ ഉന്നതവിദ്യാഭ്യാസത്തെ സംബന്ധിച്ച താഴെ പറയുന്ന പ്രസ്താവനകളിൽ തെറ്റായവ ഏവ?\n1. ഉന്നതവിദ്യാഭ്യാസത്തിൽ 2035-ഓടെ GER പൂജ്യം ശതമാനമായി കുറയ്ക്കുക എന്നതാണ് ലക്ഷ്യം .\n2. അക്കാദമിക് ബാങ്ക് ഓഫ് ക്രെഡിറ്റ്സ് വഴി വിദ്യാർത്ഥികളുടെ സർട്ടിഫിക്കറ്റുകളെല്ലാം നശിപ്പിക്കപ്പെടും .\n3. അധ്യാപകരാകാൻ ബി.എഡ് കോഴ്സുകൾ ഭാവിയിൽ ആവശ്യമില്ലെന്ന് നയം പ്രഖ്യാപിക്കുന്നു .",
         options: ["1, 3 തെറ്റാണ്", "1, 2 തെറ്റാണ്", "2, 3 തെറ്റാണ്", "എല്ലാം തെറ്റാണ്"],
         ans: 3,
-        exp: "മൂന്ന് പ്രസ്താവനകളും തെറ്റാണ്[cite: 26]. GER 50% ആക്കുകയാണ് ലക്ഷ്യം; ABC ക്രെഡിറ്റുകൾ സുരക്ഷിതമായി സൂക്ഷിക്കുന്നു; 2030-ഓടെ 4 വർഷ ഇന്റഗ്രേറ്റഡ് ബി.എഡ് നിർബന്ധിത യോഗ്യതയാണ്[cite: 26]."
+        exp: "മൂന്ന് പ്രസ്താവനകളും തെറ്റാണ്. GER 50% ആക്കുകയാണ് ലക്ഷ്യം; ABC ക്രെഡിറ്റുകൾ സുരക്ഷിതമായി സൂക്ഷിക്കുന്നു; 2030-ഓടെ 4 വർഷ ഇന്റഗ്രേറ്റഡ് ബി.എഡ് നിർബന്ധിത യോഗ്യതയാണ്."
       },
       {
         q: "ലോകോത്തര വിദേശ സർവ്വകലാശാലകൾക്ക് ഇന്ത്യയിൽ കാമ്പസുകൾ സ്ഥാപിക്കാൻ അനുമതി നൽകുന്ന നയപരമായ സമീപനം ഏതാണ്?",
         options: ["ഉന്നതവിദ്യാഭ്യാസത്തിന്റെ അന്താരാഷ്ട്രവൽക്കരണം", "സ്വകാര്യവൽക്കരണം", "ദേശസാൽക്കരണം", "വാണിജ്യവൽക്കരണം"],
         ans: 0,
-        exp: "വിദേശ സർവ്വകലാശാലകൾക്ക് ഇന്ത്യയിലും മികച്ച ഇന്ത്യൻ സർവ്വകലാശാലകൾക്ക് വിദേശത്തും കാമ്പസുകൾ തുടങ്ങാൻ അവസരമൊരുക്കുന്ന ദ്വിമുഖ അന്താരാഷ്ട്രവൽക്കരണമാണിത്[cite: 26]."
+        exp: "വിദേശ സർവ്വകലാശാലകൾക്ക് ഇന്ത്യയിലും മികച്ച ഇന്ത്യൻ സർവ്വകലാശാലകൾക്ക് വിദേശത്തും കാമ്പസുകൾ തുടങ്ങാൻ അവസരമൊരുക്കുന്ന ദ്വിമുഖ അന്താരാഷ്ട്രവൽക്കരണമാണിത്."
       }
     ];
 
@@ -440,9 +439,9 @@
 
     const fontSizes = [
       { q: "text-sm sm:text-base" },
-      { text: "text-base sm:text-lg" },
-      { text: "text-lg sm:text-xl" },
-      { text: "text-xl sm:text-2xl" }
+      { q: "text-base sm:text-lg" },
+      { q: "text-lg sm:text-xl" },
+      { q: "text-xl sm:text-2xl" }
     ];
 
     let timeLeft = 25 * 60;
@@ -452,12 +451,16 @@
     const quizScreen = document.getElementById('quizScreen');
     const resultScreen = document.getElementById('resultScreen');
 
+    function cleanTitleForMatch(str) {
+      if (!str) return "";
+      return String(str).replace(/[\s\-_,.:;()\/\\|\[\]]+/g, '').toLowerCase();
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const passedName = urlParams.get('name');
       const passedPhone = urlParams.get('phone');
       const passedTitle = urlParams.get('title');
-      const passedSheet = urlParams.get('sheetUrl');
       const passedPdf = urlParams.get('pdfUrl');
 
       if (passedName && passedName.trim() !== '') {
@@ -465,9 +468,7 @@
       } else {
         try {
           const storedUser = localStorage.getItem('sk_user_name');
-          if (storedUser && storedUser.trim() !== '') {
-            currentUser.name = storedUser.trim();
-          }
+          if (storedUser && storedUser.trim() !== '') currentUser.name = storedUser.trim();
         } catch (e) {}
       }
 
@@ -480,7 +481,6 @@
         document.getElementById('pdfExportExamTitle').innerText = `${examTitle} - ഉത്തര സൂചിക`;
       }
       
-      if (passedSheet) GOOGLE_SHEET_WEBAPP_URL = decodeURIComponent(passedSheet);
       if (passedPdf) ORIGINAL_PDF_URL = decodeURIComponent(passedPdf);
 
       const displayElem = document.getElementById('displayUser');
@@ -503,78 +503,64 @@
                            urlParams.get('view') === 'solution';
 
       if (isReviewMode) {
-        if (motivationScreen) {
-          motivationScreen.classList.add('hidden');
-          motivationScreen.style.setProperty('display', 'none', 'important');
-        }
-
-        if (quizScreen) {
-          quizScreen.classList.add('hidden');
-          quizScreen.classList.remove('flex');
-          quizScreen.style.setProperty('display', 'none', 'important');
-        }
-
-        if (resultScreen) {
-          resultScreen.classList.remove('hidden');
-          resultScreen.style.setProperty('display', 'block', 'important');
-        }
-
-        let prevScore = urlParams.get('score');
-        let prevCorrect = urlParams.get('correct');
-        let prevWrong = urlParams.get('wrong');
-        let prevSkipped = urlParams.get('skipped');
-
-        if ((!prevScore || prevScore === "0.00" || prevScore === "0") && currentUser.phone) {
-          try {
-            const histKey = `sk_history_${currentUser.phone}`;
-            const history = JSON.parse(localStorage.getItem(histKey) || '[]');
-            const matched = history.slice().reverse().find(h => 
-              h.title === examTitle || 
-              h.title === QUIZ_SHEET_NAME ||
-              (h.title && (h.title.includes("ഉന്നതവിദ്യാഭ്യാസ") || h.title.includes("HECI")))
-            );
-            if (matched) {
-              prevScore = matched.score;
-              prevCorrect = matched.correct;
-              prevWrong = matched.wrong;
-              prevSkipped = matched.skipped;
-            }
-          } catch(e) {}
-        }
-
-        document.getElementById('resultHeaderTitle').innerText = "കഴിഞ്ഞ പരീക്ഷാ ഫലം & ഉത്തര സൂചിക";
-        document.getElementById('finalScore').innerText = prevScore !== null ? Number(prevScore).toFixed(2) : "0.00";
-        document.getElementById('correctCount').innerText = prevCorrect !== null ? prevCorrect : "0";
-        document.getElementById('wrongCount').innerText = prevWrong !== null ? prevWrong : "0";
-        document.getElementById('skipCount').innerText = prevSkipped !== null ? prevSkipped : "0";
-
-        const statusElem = document.getElementById('sheetStatus');
-        if (statusElem) statusElem.style.display = 'none';
-
-        const subBadge = document.getElementById('resultSubBadge');
-        if (subBadge) subBadge.innerText = "✓ നിങ്ങൾ മുമ്പ് പൂർത്തിയാക്കിയ പരീക്ഷയുടെ ഉത്തരസൂചിക താഴെ നൽകിയിരിക്കുന്നു";
-
-        const badge = document.getElementById('scoreMotivationBadge');
-        if (badge) {
-          badge.className = "max-w-xl mx-auto p-4 rounded-2xl border border-cyan-500/60 bg-cyan-950/40 text-cyan-300";
-          badge.innerHTML = `📖 <strong>മുൻപത്തെ സ്കോർ അവലോകനം</strong> (Previous Attempt Review Mode)`;
-        }
-
-        renderReviewOnlySolutions();
-        setTimeout(() => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 100);
+        motivationScreen.style.setProperty('display', 'none', 'important');
+        quizScreen.style.setProperty('display', 'none', 'important');
+        resultScreen.classList.remove('hidden');
+        resultScreen.style.setProperty('display', 'block', 'important');
+        loadPreviousAttemptFromFirebase();
         return;
       }
     });
 
+    // 🌟 ഫയർബേസിൽ നിന്ന് മുൻപത്തെ അറ്റംപ്റ്റ് എടുത്തു കാണിക്കുന്നു
+    async function loadPreviousAttemptFromFirebase() {
+      let prevScore = 0, prevCorrect = 0, prevWrong = 0, prevSkipped = 0;
+
+      if (currentUser.phone && currentUser.phone !== "0000000000") {
+        try {
+          const res = await fetch(`${FIREBASE_DB_URL}/users_history/${currentUser.phone}.json`);
+          const data = await res.json();
+          if (data) {
+            const hList = Object.values(data);
+            const cleanT = cleanTitleForMatch(examTitle);
+            const matched = hList.slice().reverse().find(h => cleanTitleForMatch(h.title) === cleanT);
+            if (matched) {
+              prevScore = Number(matched.score || 0);
+              prevCorrect = matched.correct || 0;
+              prevWrong = matched.wrong || 0;
+              prevSkipped = matched.skipped || 0;
+            }
+          }
+        } catch(e) {}
+      }
+
+      document.getElementById('resultHeaderTitle').innerText = "കഴിഞ്ഞ പരീക്ഷാ ഫലം & ഉത്തര സൂചിക";
+      document.getElementById('finalScore').innerText = prevScore.toFixed(2);
+      document.getElementById('correctCount').innerText = prevCorrect;
+      document.getElementById('wrongCount').innerText = prevWrong;
+      document.getElementById('skipCount').innerText = prevSkipped;
+
+      const statusElem = document.getElementById('sheetStatus');
+      if (statusElem) statusElem.style.display = 'none';
+
+      const subBadge = document.getElementById('resultSubBadge');
+      if (subBadge) subBadge.innerText = "✓ നിങ്ങൾ മുമ്പ് പൂർത്തിയാക്കിയ പരീക്ഷയുടെ ഉത്തരസൂചിക താഴെ നൽകിയിരിക്കുന്നു";
+
+      const badge = document.getElementById('scoreMotivationBadge');
+      if (badge) {
+        badge.className = "max-w-xl mx-auto p-4 rounded-2xl border border-cyan-500/60 bg-cyan-950/40 text-cyan-300";
+        badge.innerHTML = `📖 <strong>മുൻപത്തെ സ്കോർ അവലോകനം</strong> (Previous Attempt Review Mode)`;
+      }
+
+      renderReviewOnlySolutions();
+      setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);
+    }
+
     document.getElementById('fullscreenToggleBtn').onclick = () => {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          alert(`Error attempting full-screen: ${err.message}`);
-        });
+        document.documentElement.requestFullscreen().catch(err => alert(`Error: ${err.message}`));
       } else {
-        if (document.exitFullscreen) { document.exitFullscreen(); }
+        if (document.exitFullscreen) document.exitFullscreen();
       }
     };
 
@@ -594,7 +580,6 @@
     }
 
     function startExamDirectly() {
-      motivationScreen.classList.add('hidden');
       motivationScreen.style.setProperty('display', 'none', 'important');
       quizScreen.classList.remove('hidden');
       quizScreen.classList.add('flex');
@@ -616,9 +601,7 @@
         timeLeft--;
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
-        const mStr = minutes < 10 ? '0' + minutes : minutes;
-        const sStr = seconds < 10 ? '0' + seconds : seconds;
-        timerDisplay.innerText = `${mStr}:${sStr}`;
+        timerDisplay.innerText = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
         if (timeLeft <= 180) {
           timerDisplay.classList.remove('text-cyan-400');
@@ -670,11 +653,29 @@
       handleReportQuestion(currentIndex + 1);
     });
 
-    function handleReportQuestion(qNum) {
+    // 🌟 ചോദ്യത്തിലെ സംശയം നേരിട്ട് ഫയർബേസിലേക്ക് റിപ്പോർട്ട് ചെയ്യുന്നു
+    async function handleReportQuestion(qNum) {
       const reason = prompt(`ചോദ്യം ${qNum} ൽ എന്തെങ്കിലും തെറ്റുകൾ ഉണ്ടെങ്കിൽ ദയവായി താഴെ രേഖപ്പെടുത്തുക:`);
       if (reason && reason.trim()) {
-        sendReportQuestionToGoogleSheet(qNum, reason.trim());
-        alert(`നന്ദി! ചോദ്യം ${qNum} ലെ സംശയം വിജയകരമായി റിപ്പോർട്ട് ചെയ്തിരിക്കുന്നു.`);
+        try {
+          await fetch(`${FIREBASE_DB_URL}/reported_questions.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              exam: examTitle,
+              question: `ചോദ്യം ${qNum}`,
+              questionNumber: qNum,
+              reason: reason.trim(),
+              candidate: currentUser.name,
+              phone: currentUser.phone,
+              date: new Date().toISOString().split('T')[0],
+              timestamp: Date.now()
+            })
+          });
+          alert(`നന്ദി! ചോദ്യം ${qNum} ലെ സംശയം അഡ്മിൻ പാനലിലേക്ക് വിജയകരമായി റിപ്പോർട്ട് ചെയ്തു.`);
+        } catch (e) {
+          alert('റിപ്പോർട്ട് ചെയ്യുന്നതിൽ തടസ്സം നേരിട്ടു.');
+        }
       }
     }
 
@@ -707,12 +708,8 @@
     }
 
     document.getElementById('nextBtn').onclick = () => {
-      if (currentIndex < questionsData.length - 1) {
-        currentIndex++;
-        renderQuestion(currentIndex);
-      } else {
-        finishExam();
-      }
+      if (currentIndex < questionsData.length - 1) { currentIndex++; renderQuestion(currentIndex); }
+      else { finishExam(); }
     };
 
     document.getElementById('prevBtn').onclick = () => {
@@ -721,12 +718,8 @@
 
     document.getElementById('skipBtn').onclick = () => {
       userAnswers[currentIndex] = null;
-      if (currentIndex < questionsData.length - 1) {
-        currentIndex++;
-        renderQuestion(currentIndex);
-      } else {
-        finishExam();
-      }
+      if (currentIndex < questionsData.length - 1) { currentIndex++; renderQuestion(currentIndex); }
+      else { finishExam(); }
     };
 
     document.getElementById('finishMidBtn').onclick = () => {
@@ -780,25 +773,6 @@
         badge.innerHTML = `💪 <strong>തളരരുത്!</strong> നോട്ട്സുകൾ കൂടുതൽ ആഴത്തിൽ പഠിച്ച് വീണ്ടും പരിശീലിക്കുക.`;
       }
 
-      try {
-        if (currentUser && currentUser.phone && currentUser.phone !== "0000000000") {
-          const historyKey = `sk_history_${currentUser.phone}`;
-          let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
-          
-          history = history.filter(h => !(h.title && (h.title === examTitle || h.title === QUIZ_SHEET_NAME)));
-          history.push({
-            title: examTitle,
-            sheetName: QUIZ_SHEET_NAME,
-            score: formattedScore,
-            correct: correct,
-            wrong: wrong,
-            skipped: skipped,
-            date: new Date().toLocaleDateString('ml-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-          });
-          localStorage.setItem(historyKey, JSON.stringify(history));
-        }
-      } catch (err) {}
-
       const downloadBtn = document.getElementById('downloadOriginalNoteBtn');
       const lockNotice = document.getElementById('pdfLockNotice');
 
@@ -820,16 +794,60 @@
       resultScreen.style.setProperty('display', 'block', 'important');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      sendResultToGoogleSheet({
+      sendResultToFirebase({
         name: currentUser.name,
         phone: currentUser.phone,
-        score: formattedScore,
+        score: scoreNum,
         correct: correct,
         wrong: wrong,
-        skipped: skipped,
-        wrongQuestions: wrongQuestionsList,
-        wrongQuestionsArray: wrongQuestionsList
+        skipped: skipped
       });
+    }
+
+    // 🌟 ഫയർബേസിലേക്ക് മാർക്കുകൾ തത്സമയം സേവ് ചെയ്യുന്നു
+    async function sendResultToFirebase(payload) {
+      const statusDiv = document.getElementById('sheetStatus');
+      if (!payload.phone || payload.phone === "0000000000") {
+        statusDiv.innerText = "✓ മാർക്ക് സ്ക്രീനിൽ ലഭ്യമാണ് (ലോഗിൻ ചെയ്തിട്ടില്ല).";
+        statusDiv.classList.remove('animate-pulse');
+        return;
+      }
+
+      const cleanExamKey = cleanTitleForMatch(examTitle);
+      const todayDate = new Date().toISOString().split('T')[0];
+
+      try {
+        await fetch(`${FIREBASE_DB_URL}/ranks/${cleanExamKey}/${payload.phone}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: payload.name,
+            phone: payload.phone,
+            score: payload.score,
+            date: todayDate
+          })
+        });
+
+        await fetch(`${FIREBASE_DB_URL}/users_history/${payload.phone}.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: examTitle,
+            score: payload.score,
+            correct: payload.correct,
+            wrong: payload.wrong,
+            skipped: payload.skipped,
+            date: todayDate,
+            timestamp: Date.now()
+          })
+        });
+
+        statusDiv.innerText = "✓ മാർക്ക് ഫയർബേസിൽ വിജയകരമായി രേഖപ്പെടുത്തി!";
+        statusDiv.className = "text-xs text-emerald-400 mb-4";
+      } catch (err) {
+        statusDiv.innerText = "ഡാറ്റ സേവ് ചെയ്യുന്നതിൽ ചെറിയ തടസ്സം നേരിട്ടു.";
+        statusDiv.className = "text-xs text-rose-400 mb-4";
+      }
     }
 
     function setupClickableReviewCards() {
@@ -920,74 +938,28 @@
       document.getElementById('filterReviewArea').classList.add('hidden');
     };
 
-    function openFeedbackModal() {
-      document.getElementById('feedbackModal').classList.remove('hidden');
-    }
+    function openFeedbackModal() { document.getElementById('feedbackModal').classList.remove('hidden'); }
 
-    function recordFeedbackAndOpenDownload(feedbackVal) {
+    // 🌟 ഫീഡ്ബാക്ക് ഫയർബേസിലേക്ക് അയക്കുന്നു
+    async function recordFeedbackAndOpenDownload(feedbackVal) {
       document.getElementById('feedbackModal').classList.add('hidden');
-      sendFeedbackToGoogleSheet(currentUser.phone, feedbackVal);
-      if (ORIGINAL_PDF_URL) {
-        window.open(ORIGINAL_PDF_URL, '_blank');
-      } else {
-        alert('ഔദ്യോഗിക PDF ലിങ്ക് ഉടൻ ലഭ്യമാക്കുന്നതാണ്.');
+      if (currentUser.phone && currentUser.phone !== "0000000000") {
+        try {
+          await fetch(`${FIREBASE_DB_URL}/feedbacks.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              exam: examTitle,
+              phone: currentUser.phone,
+              name: currentUser.name,
+              feedback: feedbackVal,
+              date: new Date().toISOString().split('T')[0]
+            })
+          });
+        } catch (e) {}
       }
-    }
-
-    function sendResultToGoogleSheet(payload) {
-      const statusDiv = document.getElementById('sheetStatus');
-      if (!GOOGLE_SHEET_WEBAPP_URL || GOOGLE_SHEET_WEBAPP_URL.includes("YOUR_APPS_SCRIPT_WEBAPP_URL_HERE")) {
-        statusDiv.innerText = "Google Sheet ലിങ്ക് നൽകിയിട്ടില്ല (മാർക്ക് മുകളിൽ ലഭ്യമാണ്).";
-        statusDiv.classList.remove('animate-pulse');
-        return;
-      }
-
-      payload.sheetName = QUIZ_SHEET_NAME;
-
-      fetch(GOOGLE_SHEET_WEBAPP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(() => {
-        statusDiv.innerText = `✓ മാർക്ക് '${QUIZ_SHEET_NAME}' എന്ന ഷീറ്റ് ടാബിലേക്ക് രേഖപ്പെടുത്തി!`;
-        statusDiv.className = "text-xs text-cyan-400 mb-4";
-      })
-      .catch(() => {
-        statusDiv.innerText = "ഡാറ്റ സേവ് ചെയ്യുന്നതിൽ ചെറിയ തടസ്സം നേരിട്ടു.";
-        statusDiv.className = "text-xs text-rose-400 mb-4";
-      });
-    }
-
-    function sendReportQuestionToGoogleSheet(qNum, reason) {
-      if (!GOOGLE_SHEET_WEBAPP_URL || GOOGLE_SHEET_WEBAPP_URL.includes("YOUR_APPS_SCRIPT_WEBAPP_URL_HERE")) return;
-      fetch(GOOGLE_SHEET_WEBAPP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: "report_question",
-          sheetName: QUIZ_SHEET_NAME,
-          questionNumber: qNum,
-          reason: reason
-        })
-      });
-    }
-
-    function sendFeedbackToGoogleSheet(phone, feedback) {
-      if (!GOOGLE_SHEET_WEBAPP_URL || GOOGLE_SHEET_WEBAPP_URL.includes("YOUR_APPS_SCRIPT_WEBAPP_URL_HERE")) return;
-      fetch(GOOGLE_SHEET_WEBAPP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: "submit_feedback",
-          sheetName: QUIZ_SHEET_NAME,
-          phone: phone,
-          feedback: feedback
-        })
-      });
+      if (ORIGINAL_PDF_URL) window.open(ORIGINAL_PDF_URL, '_blank');
+      else alert('ഔദ്യോഗിക PDF ലിങ്ക് ഉടൻ ലഭ്യമാക്കുന്നതാണ്.');
     }
 
     function renderReviewOnlySolutions() {
@@ -1117,7 +1089,8 @@
       });
     });
 
-    function fetchLiveLeaderboard() {
+    // 🌟 ഫയർബേസിൽ നിന്ന് ലൈവ് റാങ്ക് ലിസ്റ്റ് എടുത്തു കാണിക്കുന്നു
+    async function fetchLiveLeaderboard() {
       const modal = document.getElementById('leaderboardModal');
       const loader = document.getElementById('leaderboardLoading');
       const wrapper = document.getElementById('leaderboardTableWrapper');
@@ -1128,73 +1101,40 @@
       wrapper.classList.add('hidden');
       tbody.innerHTML = '';
 
-      if (!GOOGLE_SHEET_WEBAPP_URL || GOOGLE_SHEET_WEBAPP_URL.includes("YOUR_APPS_SCRIPT_WEBAPP_URL_HERE")) {
-        loader.innerText = "Google Apps Script URL സെറ്റ് ചെയ്തിട്ടില്ല.";
-        return;
-      }
+      const cleanKey = cleanTitleForMatch(examTitle);
 
-      fetch(`${GOOGLE_SHEET_WEBAPP_URL}?sheet=${encodeURIComponent(QUIZ_SHEET_NAME)}&_t=${Date.now()}`)
-        .then(res => res.json())
-        .then(data => {
-          loader.classList.add('hidden');
-          wrapper.classList.remove('hidden');
+      try {
+        const res = await fetch(`${FIREBASE_DB_URL}/ranks/${cleanKey}.json`);
+        const data = await res.json();
+        loader.classList.add('hidden');
+        wrapper.classList.remove('hidden');
 
-          const rawList = Array.isArray(data) ? data : (data.leaderboard || []);
+        if (!data) {
+          tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-slate-500">ഇതുവരെ ആരും പരീക്ഷ പൂർത്തിയാക്കിയിട്ടില്ല.</td></tr>';
+          return;
+        }
 
-          if (!rawList || rawList.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-slate-500">ഇതുവരെ ആരും പരീക്ഷ പൂർത്തിയാക്കിയിട്ടില്ല.</td></tr>';
-            return;
-          }
+        let ranks = Object.values(data);
+        ranks.sort((a, b) => Number(b.score || 0) - Number(a.score || 0));
 
-          const seenPhones = new Set();
-          const uniqueLeaderboard = [];
+        ranks.forEach((entry, idx) => {
+          let phoneStr = String(entry.phone || '').replace(/[^0-9]/g, '');
+          if (phoneStr.length >= 10) phoneStr = phoneStr.slice(-10);
+          const masked = (phoneStr && phoneStr.length >= 5) ? phoneStr.substring(0, 5) + '*****' : '---';
 
-          rawList.forEach((entry, index) => {
-            let cleanPhone = String(entry.phone || '').replace(/[^0-9]/g, '');
-            if (cleanPhone.length >= 10) {
-              cleanPhone = cleanPhone.slice(-10);
-            }
-
-            if (cleanPhone && cleanPhone !== "0000000000") {
-              if (!seenPhones.has(cleanPhone)) {
-                seenPhones.add(cleanPhone);
-                entry.originalIndex = index;
-                uniqueLeaderboard.push(entry);
-              }
-            } else {
-              entry.originalIndex = index;
-              uniqueLeaderboard.push(entry);
-            }
-          });
-
-          uniqueLeaderboard.sort((a, b) => {
-            const scoreDiff = parseFloat(b.score) - parseFloat(a.score);
-            if (scoreDiff !== 0) return scoreDiff;
-            return a.originalIndex - b.originalIndex;
-          });
-
-          uniqueLeaderboard.forEach((entry, idx) => {
-            let phoneStr = String(entry.phone || '').replace(/[^0-9]/g, '');
-            if (phoneStr.length >= 10) phoneStr = phoneStr.slice(-10);
-            
-            const masked = (phoneStr && phoneStr.length >= 5) 
-              ? phoneStr.substring(0, 5) + '*****' 
-              : '---';
-
-            const row = document.createElement('tr');
-            row.className = 'hover:bg-slate-700/30 text-slate-300';
-            row.innerHTML = `
-              <td class="py-2.5 px-3 font-mono font-bold">${idx + 1}</td>
-              <td class="py-2.5 px-3 font-medium">${entry.name}</td>
-              <td class="py-2.5 px-3 font-mono text-xs text-slate-400">${masked}</td>
-              <td class="py-2.5 px-3 text-right font-mono font-bold text-cyan-400">${Number(entry.score).toFixed(2)}</td>
-            `;
-            tbody.appendChild(row);
-          });
-        })
-        .catch(() => {
-          loader.innerText = "റാങ്ക് ലിസ്റ്റ് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല. ദയവായി അല്പം കഴിഞ്ഞ് ശ്രമിക്കുക.";
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-slate-700/30 text-slate-300';
+          row.innerHTML = `
+            <td class="py-2.5 px-3 font-mono font-bold">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-medium">${entry.name || 'വിദ്യാർത്ഥി'}</td>
+            <td class="py-2.5 px-3 font-mono text-xs text-slate-400">${masked}</td>
+            <td class="py-2.5 px-3 text-right font-mono font-bold text-cyan-400">${Number(entry.score || 0).toFixed(2)}</td>
+          `;
+          tbody.appendChild(row);
         });
+      } catch (e) {
+        loader.innerText = "റാങ്ക് ലിസ്റ്റ് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല. ദയവായി അല്പം കഴിഞ്ഞ് ശ്രമിക്കുക.";
+      }
     }
 
     function closeLeaderboard() {
